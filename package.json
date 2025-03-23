@@ -1,0 +1,15 @@
+{
+  "name": "web-scrapper",
+  "version": "1.0.0",
+  "description": "web scrapper for kolesa kz",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.14.1",
+    "puppeteer": "^24.4.0"
+  }
+}
