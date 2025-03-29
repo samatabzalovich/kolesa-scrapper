@@ -43,16 +43,32 @@ async function scrapeListings(url) {
             const rawDate = dateElement ? dateElement.innerText.trim() : null;
     
             function convertDate(rawDate) {
-                if (!rawDate) return null;
+                if (!rawDate || typeof rawDate !== "string") return null; // Ensure it's a valid string
+            
                 const months = {
-                    "янв.": "01", "фев.": "02", "мар.": "03",
-                    "апр.": "04", "май": "05", "июн.": "06",
-                    "июл.": "07", "авг.": "08", "сен.": "09",
-                    "окт.": "10", "ноя.": "11", "дек.": "12"
+                    "янв.": "01",
+                    "фев.": "02",
+                    "мар.": "03",
+                    "апр.": "04",
+                    "май.": "05",
+                    "июн.": "06",
+                    "июл.": "07",
+                    "авг.": "08",
+                    "сен.": "09",
+                    "окт.": "10",
+                    "ноя.": "11",
+                    "дек.": "12"
                 };
-                const [day, monthText] = rawDate.split(" ");
-                const month = months[monthText.toLowerCase()] || "01";
-                return `2025-${month}-${day.padStart(2, "0")}`; // Format YYYY-MM-DD
+            
+                const parts = rawDate.toLowerCase().split(" ");
+                if (parts.length !== 2) return null; // Ensure date format is correct
+            
+                const day = parts[0].padStart(2, "0");
+                const month = months[parts[1]];
+            
+                if (!month) return null; // Invalid month
+            
+                return `2025-${month}-${day}`; // Assuming year is always 2025
             }
     
             const date = convertDate(rawDate);
@@ -126,8 +142,9 @@ async function startScraping() {
     const baseURL = "https://krisha.kz/prodazha/kvartiry/";
     const maxPages = 1000;
 
-    for (let i = 200; i <= maxPages; i++) {
+    for (let i = 300; i <= maxPages; i++) {
         const url = i === 1 ? baseURL : `${baseURL}?page=${i}`;
+        console.log(`Scraping page ${i}: ${url}`);
         await scrapeListings(url);
     }
 }
